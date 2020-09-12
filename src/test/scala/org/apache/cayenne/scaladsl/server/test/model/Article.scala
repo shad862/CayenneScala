@@ -11,7 +11,7 @@ class Article extends _Article {
 object Article {
   val serialVersionUID: Long = 1L
 
-  def apply(content: String)(implicit objectContext: ObjectContext = null): Article = {
+  def apply(content: String = "")(implicit objectContext: ObjectContext = null): Article = {
     val article: Article = objectContext match {
       case context: ObjectContext  => context.newObject(classOf[Article])
       case null => new Article()

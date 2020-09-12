@@ -6,10 +6,12 @@ scalaVersion := "2.13.3"
 
 libraryDependencies ++= Seq(
   "org.apache.cayenne" % "cayenne-server" % "4.2.M1",
+  "org.typelevel" %% "cats-core" % "2.2.0",
 
   "org.slf4j" % "slf4j-simple" % "1.7.30" % Test,
   "org.apache.derby" % "derby" % "10.14.2.0" % Test,
-  "com.lihaoyi" %% "utest" % "0.7.5" % Test
+  "com.lihaoyi" %% "utest" % "0.7.5" % Test,
+
 )
 
 testFrameworks += new TestFramework("utest.runner.Framework")
