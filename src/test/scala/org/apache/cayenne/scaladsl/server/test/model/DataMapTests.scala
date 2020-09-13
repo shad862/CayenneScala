@@ -49,6 +49,7 @@ object DataMapTests extends TestSuite {
 
         dn.setBatchTranslatorFactory(batchTranslatorFactory)
         dn.setSelectTranslatorFactory(selectTranslatorFactory)
+        dn.setJdbcEventLogger(jdbcEventLogger)
 
         dn
       })
