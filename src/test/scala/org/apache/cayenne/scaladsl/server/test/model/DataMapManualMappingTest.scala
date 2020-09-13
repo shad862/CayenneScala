@@ -2,6 +2,7 @@ package org.apache.cayenne.scaladsl.server.test.model
 
 import java.util
 
+import org.apache.cayenne.{ObjectContext, PersistenceState}
 import org.apache.cayenne.access.dbsync.CreateIfNoSchemaStrategy
 import org.apache.cayenne.access.translator.batch.BatchTranslatorFactory
 import org.apache.cayenne.access.translator.select.SelectTranslatorFactory
@@ -16,7 +17,7 @@ import org.apache.cayenne.map._
 import org.apache.derby.jdbc.EmbeddedDriver
 import utest._
 
-object DataMapTests extends TestSuite {
+object DataMapManualMappingTest extends TestSuite {
 
   trait DataDomainProvider extends Provider[DataDomain] {
     @Inject var dataRowStoreFactory: DataRowStoreFactory = _
@@ -118,13 +119,15 @@ object DataMapTests extends TestSuite {
   }
 
   val tests: Tests = Tests {
-
     test ("DataMap loader") {
 
+      System.setSecurityManager(null)
+
       val rnt = builder()
-        //.addConfig("cayenne-project.xml")
-        //.dataSource(url("jdbc:derby:memory:testdb;create=true").driver("org.apache.derby.jdbc.EmbeddedDriver").build())
+        //.addConfig("cayenne-project.xml") //disable default xml mapping
         .addModule(dataDomainProviderModule)
+        //next line hide previous DataDomainProvider
+        //.dataSource(url("jdbc:derby:memory:testdb;create=true").driver("org.apache.derby.jdbc.EmbeddedDriver").build())
         .addModule(dataMapProviderModule)
         .addModule(entitiesProviderModule)
         .build()
@@ -132,11 +135,9 @@ object DataMapTests extends TestSuite {
       val ctx = rnt.newContext
       val article = ctx.newObject(classOf[Article])
       article.setContent("Content")
-
-
       ctx.commitChanges()
 
-      println(ctx)
+      assert(article.getPersistenceState == PersistenceState.COMMITTED)
     }
   }
 }
